@@ -4,6 +4,7 @@ app.py - Entry point for the Ikobiz FastAPI server.
 Run with: uvicorn app:app --reload
 """
 
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,9 +19,13 @@ from app.whatsapp.routes import router as whatsapp_bot_router
 
 app = FastAPI(title="Ikobiz Marketplace API")
 
+# Configure CORS for production and development
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

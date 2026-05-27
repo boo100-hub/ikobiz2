@@ -2,6 +2,8 @@
 alembic/env.py - Alembic environment configuration.
 
 Imports all models so autogenerate can detect schema changes.
+Reads DATABASE_URL from environment variable if set, otherwise falls
+back to sqlalchemy.url in alembic.ini.
 """
 
 from logging.config import fileConfig
@@ -11,11 +13,19 @@ import os
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from dotenv import load_dotenv
+
+load_dotenv()
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+# Override DB URL from environment if set
+db_url = os.getenv("DATABASE_URL")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
 
 # Ensure the backend root is on sys.path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))

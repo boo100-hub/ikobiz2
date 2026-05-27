@@ -19,5 +19,11 @@ class Settings:
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
+    # Frontend URL (used in notifications and links)
+    SITE_URL: str = os.getenv("SITE_URL", "http://localhost:3000")
+
+    # WhatsApp notification recipient override (for testing)
+    NOTIFY_PHONE: str = os.getenv("NOTIFY_PHONE", "")
+
 
 settings = Settings()

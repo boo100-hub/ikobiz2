@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
 
+from core.config import settings
 from core.database import get_db
 from dependencies.auth import get_current_user
 from models import User, IkobizListing, IkobizListingStatus, Product, ProductStatus, CartItem, Order, OrderItem, OrderStatus
@@ -24,9 +25,7 @@ class CheckoutRequest(BaseModel):
     pass
 
 
-SITE_URL = "http://localhost:3000"
 
-TEST_PHONE = "254702193430"
 
 
 # ---------- Cart ----------
@@ -207,12 +206,12 @@ def checkout(
                 seller = db.query(User).filter(User.id == listing.seller_id).first()
                 if seller and seller.phone:
                     _notify_via_whatsapp(
-                        TEST_PHONE,
+                        settings.NOTIFY_PHONE or seller.phone,
                         f"📦 New Order!\n"
                         f"'{listing.title}' x{ci.quantity} — {_format_ksh(line_total)}\n"
                         f"Buyer: {user.username}\n"
                         f"Seller: {seller.username}\n"
-                        f"View: {SITE_URL}/dashboard/ikobiz"
+                        f"View: {settings.SITE_URL}/dashboard/ikobiz"
                     )
                     notified_sellers.add(listing.seller_id)
 
@@ -235,13 +234,13 @@ def checkout(
                 seller = db.query(User).filter(User.id == shop.owner_id).first()
                 if seller and seller.phone:
                     _notify_via_whatsapp(
-                        TEST_PHONE,
+                        settings.NOTIFY_PHONE or seller.phone,
                         f"📦 New Order!\n"
                         f"'{product.title}' x{ci.quantity} — {_format_ksh(line_total)}\n"
                         f"Shop: {shop.name}\n"
                         f"Buyer: {user.username}\n"
                         f"Seller: {seller.username}\n"
-                        f"View: {SITE_URL}/dashboard"
+                        f"View: {settings.SITE_URL}/dashboard"
                     )
                     notified_sellers.add(shop.owner_id)
 
@@ -279,10 +278,10 @@ def checkout(
 
     if user.phone:
         _notify_via_whatsapp(
-            TEST_PHONE,
+            settings.NOTIFY_PHONE or user.phone,
             f"✅ Order #{order.id} Confirmed!\n"
             f"Total: {_format_ksh(order.total)}\n"
-            f"View your orders: {SITE_URL}/checkout/{order.id}"
+            f"View your orders: {settings.SITE_URL}/checkout/{order.id}"
         )
 
     return {

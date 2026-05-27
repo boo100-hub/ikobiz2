@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
+from core.config import settings
 from core.database import get_db
 from dependencies.auth import get_current_user
 from models import User, IkobizListing, Negotiation, IkobizListingStatus
@@ -20,7 +21,7 @@ class OfferCreate(BaseModel):
     is_counter_offer: bool = False
 
 
-SITE_URL = "https://ikobiz.co.ke"
+
 
 
 def _notify_whatsapp(phone: str | None, message: str):
@@ -69,7 +70,7 @@ def submit_offer(
                 f"Buyer: {data.buyer_name}\n"
                 f"Offer: {_format_ksh(data.offer_price)}\n"
                 f"Message: {data.message or 'None'}\n\n"
-                f"View & reply: {SITE_URL}/frontend/pages/ikobiz-item.html?id={product.id}"
+                f"View & reply: {settings.SITE_URL}/frontend/pages/ikobiz-item.html?id={product.id}"
             )
 
     return offer
