@@ -7,7 +7,8 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 from core.config import settings
 
-engine = create_engine(settings.DATABASE_URL)
+_db_url = settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+engine = create_engine(_db_url)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

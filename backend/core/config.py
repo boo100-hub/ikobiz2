@@ -13,7 +13,7 @@ load_dotenv()
 class Settings:
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
-        "postgresql://ikobiz:ikobiz123@localhost:5432/ikobiz_db",
+        "postgresql+psycopg://ikobiz:ikobiz123@localhost:5432/ikobiz_db",
     )
     SECRET_KEY: str = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
     ALGORITHM: str = "HS256"
