@@ -5,7 +5,7 @@ services:
     pythonVersion: 3.11
     plan: free
     buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && alembic upgrade head && gunicorn -w 4 -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:$PORT
+    startCommand: cd backend && alembic upgrade head && gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         scope: SERVICE
