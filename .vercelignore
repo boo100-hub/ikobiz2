@@ -1,0 +1,7 @@
+# Vercel Deployment — Ignore all except web directory
+backend/
+DEPLOYMENT_GUIDE.md
+SETUP_DB.md
+STRUCTURE.md
+README.md
+.git/

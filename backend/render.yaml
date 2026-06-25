@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: ikobiz-api
+    env: python
+    pythonVersion: 3.11
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd backend && alembic upgrade head && gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DATABASE_URL
+        scope: SERVICE
+      - key: SECRET_KEY
+        scope: SERVICE
+      - key: SITE_URL
+        scope: SERVICE
+      - key: IKOBIZ_META_DEV_TOKEN
+        scope: SERVICE
+      - key: PHONE_NUMBER_ID
+        scope: SERVICE
+      - key: VERIFY_TOKEN
+        scope: SERVICE
+      - key: GROQ_API_KEY
+        scope: SERVICE
+      - key: NOTIFY_PHONE
+        scope: SERVICE
